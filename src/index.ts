@@ -2,6 +2,8 @@ import 'dotenv/config'
 import 'reflect-metadata'
 import http from 'http'
 import express, {Express} from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import { buildSchema } from 'type-graphql'
 import { ApolloServer } from 'apollo-server-express'
 import {
@@ -10,6 +12,7 @@ import {
 } from 'apollo-server-core'
 import { UserResolver } from './resolvers/user.resolver'
 import { createContext } from './context'
+import { formatError } from './utils/errorHandler'
 
 (async function() {
 
@@ -17,6 +20,15 @@ import { createContext } from './context'
   const PORT = process.env.PORT || 8080
 
   //express middlewares
+  app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  }))
+  app.use(cookieParser())
+
+  app.get('/refresh_token', (req, res) => {
+    res.send(req.cookies.token)
+  })
 
   const schema = await buildSchema({
     resolvers: [
@@ -31,7 +43,8 @@ import { createContext } from './context'
       ApolloServerPluginLandingPageProductionDefault :
       ApolloServerPluginLandingPageGraphQLPlayground
     ],
-    context: createContext
+    context: createContext,
+    formatError
   })
 
   await apolloServer.start();

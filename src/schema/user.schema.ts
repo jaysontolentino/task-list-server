@@ -1,15 +1,42 @@
 import { IsEmail } from "class-validator";
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
+
+@ObjectType()
+export class User {
+    @Field(() => String)
+    id!: string
+
+    @Field(() => String)
+    name!: string
+
+    @Field(() => String)
+    email!: string
+}
 
 @InputType()
 export class UserRegisterInput {
-    @Field()
+    @Field(() => String)
     name!: string
 
-    @Field()
+    @Field(() => String)
     @IsEmail()
     email!: string;
 
-    @Field()
+    @Field(() => String)
     password!: string;
+}
+
+@InputType()
+export class UserLoginInput {
+    @Field(() => String)
+    email!: string
+
+    @Field(() => String)
+    password!: string
+}
+
+@ObjectType()
+export class LoginResponse {
+    @Field(() => String)
+    access_token!: string
 }
