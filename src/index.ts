@@ -10,9 +10,10 @@ import {
   ApolloServerPluginLandingPageProductionDefault, 
   ApolloServerPluginLandingPageGraphQLPlayground
 } from 'apollo-server-core'
-import { UserResolver } from './resolvers/user.resolver'
+import resolvers from './resolvers'
 import { createContext } from './context'
 import { formatError } from './utils/errorHandler'
+import { authChecker } from './utils/authChecker'
 
 (async function() {
 
@@ -31,9 +32,8 @@ import { formatError } from './utils/errorHandler'
   })
 
   const schema = await buildSchema({
-    resolvers: [
-      UserResolver
-    ]
+    resolvers,
+    authChecker
   })
 
   const apolloServer = new ApolloServer({

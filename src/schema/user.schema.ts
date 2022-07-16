@@ -12,31 +12,3 @@ export class User {
     @Field(() => String)
     email!: string
 }
-
-@InputType()
-export class UserRegisterInput {
-    @Field(() => String)
-    name!: string
-
-    @Field(() => String)
-    @IsEmail()
-    email!: string;
-
-    @Field(() => String)
-    password!: string;
-}
-
-@InputType()
-export class UserLoginInput {
-    @Field(() => String)
-    email!: string
-
-    @Field(() => String)
-    password!: string
-}
-
-@ObjectType()
-export class LoginResponse {
-    @Field(() => String)
-    access_token!: string
-}
