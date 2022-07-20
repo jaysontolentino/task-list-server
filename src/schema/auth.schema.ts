@@ -43,3 +43,9 @@ export class DecodedToken {
     @Field(() => Number)
     exp!: number
 }
+
+@ObjectType()
+export class RefreshTokenResponse {
+    @Field()
+    accessToken!: string
+}

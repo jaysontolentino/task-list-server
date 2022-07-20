@@ -1,6 +1,7 @@
 import { UserLoginInput, UserRegisterInput } from '../schema/auth.schema'
 import * as argon from 'argon2'
 import { prisma } from '../utils/prisma'
+import { UserInputError } from 'apollo-server'
 
 export class AuthService {
 
@@ -31,12 +32,12 @@ export class AuthService {
                 }
             })
 
-            if(!user) throw new Error('Invalid credentials')
+            if(!user) throw new UserInputError('Invalid credentials')
 
             // check the password
             const match = await argon.verify(user.password, password)
 
-            if(!match) throw new Error('Incorrect password')
+            if(!match) throw new UserInputError('Incorrect password')
 
             return user
         } catch (error) {

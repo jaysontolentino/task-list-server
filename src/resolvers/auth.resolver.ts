@@ -1,9 +1,10 @@
 import { Context } from './../context'
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
-import { signAccessToken, signRefreshToken } from '../utils/jwt'
-import { LoginResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { privateKey, signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt'
+import { DecodedToken, LoginResponse, RefreshTokenResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
 import { User } from '../schema/user.schema'
 import { AuthService } from '../services/auth.service'
+import { prisma } from '../utils/prisma'
 
 @Resolver()
 export default class UserResolver {
@@ -51,8 +52,46 @@ export default class UserResolver {
             }
 
         } catch (error) {
+            console.log(error)
             throw error
         }
+    }
+
+    @Mutation(() => RefreshTokenResponse)
+    async refreshToken(@Ctx() context: Context): Promise<RefreshTokenResponse> {
+
+        const {token} = context.req.cookies
+
+        console.log('cookie token: ', context.req.cookies)
+
+        if(!token) return { accessToken: '' }
+
+        try {
+
+            const decoded = verifyToken<DecodedToken>(token, privateKey)
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: decoded?.user_id
+                }
+            })
+
+            if(!user) return { accessToken: ''}
+
+            const payload = {
+                ...user,
+                user_id: user.id,
+                email: user.email
+            }
+
+            const accessToken = signAccessToken(payload)
+
+            return {accessToken}
+
+        } catch (error) {
+            throw error
+        }
+
     }
 
 }

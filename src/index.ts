@@ -27,13 +27,8 @@ import { authChecker } from './utils/authChecker'
   }))
   app.use(cookieParser())
 
-  app.get('/refresh_token', (req, res) => {
-    res.send(req.cookies.token)
-  })
-
   const schema = await buildSchema({
-    resolvers,
-    authChecker
+    resolvers
   })
 
   const apolloServer = new ApolloServer({
@@ -49,7 +44,7 @@ import { authChecker } from './utils/authChecker'
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({app})
+  apolloServer.applyMiddleware({app, cors: false})
 
   const httpServer = http.createServer(app)
   httpServer.listen(PORT, () => {
