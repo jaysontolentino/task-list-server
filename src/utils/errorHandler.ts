@@ -18,7 +18,7 @@ export function formatError(error: GraphQLError) {
 
     if(err instanceof JsonWebTokenError) return new ApolloError('Something went wrong')
 
-    console.log(error)
+    console.log(err)
 
     return error
 }

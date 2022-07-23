@@ -1,8 +1,9 @@
 import { Context } from './../context'
-import { Authorized, Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
+import { Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
 import { UserService } from '../services/user.service'
 import { DecodedToken } from './../schema/auth.schema'
 import { isAuthenticated } from '../utils/isAuthenticated'
+import { User } from '../schema/user.schema'
 
 @Resolver()
 export default class UserResolver {
@@ -13,13 +14,19 @@ export default class UserResolver {
         this.userService = new UserService
     }
 
-    
-    @Query(() => DecodedToken, {nullable: true})
+    @Query(() => User, {nullable: true})
     @UseMiddleware(isAuthenticated)
-    me(@Ctx() context: Context) {
-
-        return context.user
+    async user(@Ctx() context: Context) {
         
+        const authUser = context.user
+
+        try {
+            const profile = await this.userService.profile(authUser?.user_id as string)
+            return profile
+        } catch (error) {
+            throw error
+        }
+
     }
 
 }

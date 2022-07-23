@@ -1,5 +1,5 @@
 import { Context } from './../context'
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
 import { privateKey, signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt'
 import { DecodedToken, LoginResponse, RefreshTokenResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
 import { User } from '../schema/user.schema'
@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service'
 import { prisma } from '../utils/prisma'
 
 @Resolver()
-export default class UserResolver {
+export default class AuthResolver {
 
     protected authService
 
@@ -36,6 +36,7 @@ export default class UserResolver {
     ): Promise<LoginResponse> {
 
         try {
+
             const user = await this.authService.login(input)
             // generate access and refresh token
             let payload = {user_id: user.id, email: user.email}
@@ -48,21 +49,29 @@ export default class UserResolver {
             })
         
             return {
-                access_token
+                access_token,
+                user
             }
 
         } catch (error) {
-            console.log(error)
             throw error
         }
+    }
+
+    @Mutation(() => Boolean)
+    logout(@Ctx() context: Context) {
+        context.res.cookie('token', '', {
+            httpOnly: true,
+            path: '/'
+        })
+
+        return true
     }
 
     @Mutation(() => RefreshTokenResponse)
     async refreshToken(@Ctx() context: Context): Promise<RefreshTokenResponse> {
 
         const {token} = context.req.cookies
-
-        console.log('cookie token: ', context.req.cookies)
 
         if(!token) return { accessToken: '' }
 
@@ -85,6 +94,8 @@ export default class UserResolver {
             }
 
             const accessToken = signAccessToken(payload)
+
+            console.log(`Refreshed Token: ${accessToken}`)
 
             return {accessToken}
 

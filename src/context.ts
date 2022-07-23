@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { DecodedToken } from './schema/auth.schema'
 import { publicKey, verifyToken } from './utils/jwt'
 
 function getUser(req: Request) {
@@ -8,7 +9,7 @@ function getUser(req: Request) {
 
     try {
         const token = authorization.split(' ')[1]
-        const decoded = verifyToken(token, publicKey)
+        const decoded = verifyToken<DecodedToken>(token, publicKey)
         return decoded
     } catch (error) {
         return null
