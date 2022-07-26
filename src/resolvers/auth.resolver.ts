@@ -60,7 +60,12 @@ export default class AuthResolver {
 
     @Mutation(() => Boolean)
     logout(@Ctx() context: Context) {
-        context.res.cookie('token', '', {
+        // context.res.cookie('token', '', {
+        //     httpOnly: true,
+        //     path: '/'
+        // })
+
+        context.res.clearCookie('token', {
             httpOnly: true,
             path: '/'
         })
@@ -88,14 +93,12 @@ export default class AuthResolver {
             if(!user) return { accessToken: ''}
 
             const payload = {
-                ...user,
                 user_id: user.id,
-                email: user.email
+                email: user.email,
+                name: user.name
             }
 
             const accessToken = signAccessToken(payload)
-
-            console.log(`Refreshed Token: ${accessToken}`)
 
             return {accessToken}
 
