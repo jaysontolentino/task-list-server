@@ -1,10 +1,11 @@
 import { Context } from './../context'
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from 'type-graphql'
 import { privateKey, signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt'
 import { DecodedToken, LoginResponse, RefreshTokenResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
 import { User } from '../schema/user.schema'
 import { AuthService } from '../services/auth.service'
 import { prisma } from '../utils/prisma'
+import { isAuthenticated } from '../utils/isAuthenticated'
 
 @Resolver()
 export default class AuthResolver {
@@ -59,8 +60,14 @@ export default class AuthResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuthenticated)
     logout(@Ctx() context: Context) {
-        context.res.cookie('token', '', {
+        // context.res.cookie('token', '', {
+        //     httpOnly: true,
+        //     path: '/'
+        // })
+
+        context.res.clearCookie('token', {
             httpOnly: true,
             path: '/'
         })
@@ -88,14 +95,12 @@ export default class AuthResolver {
             if(!user) return { accessToken: ''}
 
             const payload = {
-                ...user,
                 user_id: user.id,
-                email: user.email
+                email: user.email,
+                name: user.name
             }
 
             const accessToken = signAccessToken(payload)
-
-            console.log(`Refreshed Token: ${accessToken}`)
 
             return {accessToken}
 

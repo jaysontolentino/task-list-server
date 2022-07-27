@@ -3,8 +3,8 @@ import { Field, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class User {
-    @Field(() => String)
-    id!: string
+    @Field(() => Number)
+    id!: number
 
     @Field(() => String)
     name!: string

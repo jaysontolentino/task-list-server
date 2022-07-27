@@ -1,24 +1,19 @@
 import { AuthenticationError } from "apollo-server";
 import { MiddlewareFn } from "type-graphql";
 import { Context } from "../context";
-import { DecodedToken } from "../schema/auth.schema";
-import { publicKey, verifyToken } from "./jwt";
 import { prisma } from "./prisma";
 
-export const isAuthenticated: MiddlewareFn<Context> = async function(args, next) {
+export const isAuthenticated: MiddlewareFn<Context> = async function({context}, next) {
 
-    const auth =  args.context.req.headers['authorization']
+    const authUser = context.user
 
-    if(!auth) throw new AuthenticationError('Unauthorized')
+    if(!authUser) throw new AuthenticationError('Unauthorized')
 
     try {
-        const token = auth.split(' ')[1]
-
-        const decoded = verifyToken<DecodedToken>(token, publicKey)
 
         const user = await prisma.user.findUnique({
             where: {
-                id: decoded?.user_id
+                id: authUser.user_id
             }
         })
 
@@ -30,5 +25,4 @@ export const isAuthenticated: MiddlewareFn<Context> = async function(args, next)
         throw new AuthenticationError('Unauthorized')
     }
 
-    
 }

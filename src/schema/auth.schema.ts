@@ -39,8 +39,8 @@ export class LoginResponse {
 
 @ObjectType()
 export class DecodedToken {
-    @Field(() => String)
-    user_id!: string
+    @Field(() => Number)
+    user_id!: number
 
     @Field(() => String)
     email!: string
