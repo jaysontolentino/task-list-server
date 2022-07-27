@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 
 export class TaskService {
@@ -11,25 +12,32 @@ export class TaskService {
         }
     }
 
-    async get(id: string, data: object) {
+    async get(id: string) {
         try {
-            const updatedTask = await prisma.task.update({
+            const task = await prisma.task.findUnique({
                 where: {
                     id
-                },
-                data
+                }
             })
 
-            return updatedTask
+            return task
         } catch (error) {
             throw error
         }
     }
 
-    async add(data: any) {
+    async add(userId: number, payload: {
+        task: string
+        description: string
+    }) {
         try {
             const task = await prisma.task.create({
-                data
+                data: {
+                    ...payload,
+                    user: {
+                        connect: {id: userId}
+                    }
+                }
             })
             return task
         } catch (error) {
@@ -37,11 +45,22 @@ export class TaskService {
         }
     }
 
-    async update(id: string) {
+    async update(id: string, payload: {
+        task?: string
+        description?: string
+        isCompleted?: boolean
+    }) {
         try {
-            
+            const updatedTask = await prisma.task.update({
+                where: {
+                    id
+                },
+                data: payload
+            })
+
+            return updatedTask
         } catch (error) {
-            
+            throw error
         }
     }
 

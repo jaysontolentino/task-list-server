@@ -1,5 +1,6 @@
 
 import { Field, ObjectType } from "type-graphql";
+import { Task } from "./task.schema";
 
 @ObjectType()
 export class User {
@@ -11,4 +12,7 @@ export class User {
 
     @Field(() => String)
     email!: string
+
+    @Field(() => [Task], {nullable: true})
+    tasks!: Task[]
 }

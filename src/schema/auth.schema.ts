@@ -1,6 +1,7 @@
-import { IsEmail, IsNotEmpty, Min } from 'class-validator'
+import { IsEmail, IsNotEmpty, Min, MinLength } from 'class-validator'
 import { Field, InputType, ObjectType } from 'type-graphql'
 import { User } from './user.schema';
+
 
 @InputType()
 export class UserRegisterInput {
@@ -12,7 +13,7 @@ export class UserRegisterInput {
     email!: string;
 
     @Field(() => String)
-    @Min(8)
+    @MinLength(8)
     password!: string;
 }
 
@@ -30,12 +31,24 @@ export class UserLoginInput {
 }
 
 @ObjectType()
+export class RegisterResponse {
+    @Field(() => Number)
+    id!: number
+
+    @Field(() => String)
+    name!: string
+
+    @Field(() => String)
+    email!: string
+}
+
+@ObjectType()
 export class LoginResponse {
     @Field(() => String)
     access_token!: string
 
     @Field()
-    user!: User
+    user!: RegisterResponse
 }
 
 @ObjectType()

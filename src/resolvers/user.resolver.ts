@@ -2,8 +2,8 @@ import { Context } from './../context'
 import { Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
 import { UserService } from '../services/user.service'
 import { isAuthenticated } from '../utils/isAuthenticated'
-import { User } from '../schema/user.schema'
 import { DecodedToken } from '../schema/auth.schema'
+import { User } from '../schema/user.schema'
 
 @Resolver()
 export default class UserResolver {

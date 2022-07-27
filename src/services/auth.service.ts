@@ -8,14 +8,22 @@ export class AuthService {
     async register(input: UserRegisterInput) {
         try {
 
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: input.email
+                }
+            })
+
+            if(user) throw new UserInputError('Email already exist') 
+
             const hash = await argon.hash(input.password)
-            const user = await prisma.user.create({
+            const newUser = await prisma.user.create({
                 data: {
                     ...input,
                     password: hash
                 }
             })
-            return user
+            return newUser
         } catch (error) {
             throw error
         }

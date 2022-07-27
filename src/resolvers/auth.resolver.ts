@@ -1,7 +1,7 @@
 import { Context } from './../context'
 import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from 'type-graphql'
 import { privateKey, signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt'
-import { DecodedToken, LoginResponse, RefreshTokenResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
+import { DecodedToken, LoginResponse, RefreshTokenResponse, RegisterResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
 import { User } from '../schema/user.schema'
 import { AuthService } from '../services/auth.service'
 import { prisma } from '../utils/prisma'
@@ -16,10 +16,10 @@ export default class AuthResolver {
         this.authService = new AuthService
     }
 
-    @Mutation(() => User)
+    @Mutation(() => RegisterResponse)
     async register(
         @Arg('input') input: UserRegisterInput
-    ): Promise<User> {
+    ): Promise<RegisterResponse> {
 
         try {
             const user = await this.authService.register(input)

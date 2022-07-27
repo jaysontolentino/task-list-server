@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class Task {
@@ -20,4 +20,13 @@ export class Task {
 
     @Field(() => Date)
     updated_at!: Date    
+}
+
+@InputType()
+export class InputAddTask {
+    @Field(() => String)
+    task!: string
+
+    @Field(() => String)
+    description!: string
 }
