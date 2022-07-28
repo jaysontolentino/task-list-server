@@ -12,6 +12,19 @@ export class TaskService {
         }
     }
 
+    async userTasks(userId: number) {
+        try {
+            const tasks = await prisma.task.findMany({
+                where: {
+                    userId
+                }
+            })
+            return tasks
+        } catch (error) {
+            throw error
+        }
+    }
+
     async get(id: string) {
         try {
             const task = await prisma.task.findUnique({

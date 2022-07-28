@@ -1,3 +1,4 @@
+import { Task } from './../schema/task.schema';
 import { Context } from './../context'
 import { Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
 import { UserService } from '../services/user.service'
@@ -26,7 +27,6 @@ export default class UserResolver {
         } catch (error) {
             throw error
         }
-
     }
 
 }

@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { Context } from './../context';
 import { isAuthenticated } from './../utils/isAuthenticated';
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
@@ -12,7 +11,7 @@ export default class TaskResolver {
     protected taskService
 
     constructor() {
-        this.taskService = new TaskService()
+        this.taskService = new TaskService
     }
 
     //get all tasks
@@ -21,6 +20,17 @@ export default class TaskResolver {
     async getAll() {
         try {
             const tasks = await this.taskService.getAll()
+            return tasks
+        } catch (error) {
+            throw error  
+        }
+    }
+
+    @Query(() => [Task])
+    @UseMiddleware(isAuthenticated)
+    async userTasks(@Ctx() context: Context) {
+        try {
+            const tasks = await this.taskService.userTasks(context.user?.user_id as number)
             return tasks
         } catch (error) {
             throw error  
