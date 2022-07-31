@@ -65,17 +65,26 @@ export default class TaskResolver {
         }
     }
 
-    //update task
-    // @Mutation()
-    // @UseMiddleware(isAuthenticated)
-    // async updateTask() {
+    @Mutation(() => Task)
+    @UseMiddleware(isAuthenticated)
+    async completeTask(@Arg('id') id: string ) {
+        try {
+            const task = await this.taskService.complete(id)
+            return task
+        } catch (error) {
+            throw error
+        }
+    }
 
-    // }
-
-    // //delete task
-    // @Mutation()
-    // @UseMiddleware(isAuthenticated)
-    // async deleteTask() {
-
-    // }
+    //delete task
+    @Mutation(() => Task)
+    @UseMiddleware(isAuthenticated)
+    async deleteTask(@Arg('id') id: string) {
+        try {
+            const task = await this.taskService.delete(id)
+            return task
+        } catch (error) {
+            throw error
+        }
+    }
 }

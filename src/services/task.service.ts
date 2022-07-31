@@ -77,7 +77,32 @@ export class TaskService {
         }
     }
 
-    async delete() {
+    async complete(id: string) {
+        try {
+            const task = await prisma.task.update({
+                where: {
+                    id
+                },
+                data: {
+                    complete: true
+                }
+            })
 
+            return task
+        } catch (error) {
+            throw error
+        }
     }
+
+    async delete(id: string) {
+        try {
+            const task = await prisma.task.delete({
+                where: {id}
+            })
+            return task
+        } catch (error) {
+            throw error
+        }
+    }
+
 }

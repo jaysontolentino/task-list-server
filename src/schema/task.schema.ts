@@ -12,8 +12,8 @@ export class Task {
     @Field(() => String)
     description!: string
 
-    @Field(() => Boolean)
-    isCompleted!: boolean
+    @Field(() => Boolean, {nullable: true})
+    complete!: boolean
 
     @Field(() => Date)
     created_at!: Date
