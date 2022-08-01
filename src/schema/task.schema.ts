@@ -30,3 +30,12 @@ export class InputAddTask {
     @Field(() => String)
     description!: string
 }
+
+@InputType()
+export class InputUpdateTask {
+    @Field(() => String)
+    task!: string
+
+    @Field(() => String)
+    description!: string
+}

@@ -1,5 +1,4 @@
-import { User } from "@prisma/client";
-import { prisma } from "../utils/prisma";
+import { prisma } from '../utils/prisma'
 
 export class TaskService {
 
@@ -61,7 +60,6 @@ export class TaskService {
     async update(id: string, payload: {
         task?: string
         description?: string
-        isCompleted?: boolean
     }) {
         try {
             const updatedTask = await prisma.task.update({

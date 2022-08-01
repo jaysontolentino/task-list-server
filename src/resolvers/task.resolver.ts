@@ -3,7 +3,8 @@ import { isAuthenticated } from './../utils/isAuthenticated';
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { TaskService } from "../services/task.service";
 import { DecodedToken } from '../schema/auth.schema';
-import { InputAddTask, Task } from '../schema/task.schema';
+import { InputAddTask, InputUpdateTask, Task } from '../schema/task.schema';
+import { prisma } from '@prisma/client';
 
 @Resolver()
 export default class TaskResolver {
@@ -71,6 +72,18 @@ export default class TaskResolver {
         try {
             const task = await this.taskService.complete(id)
             return task
+        } catch (error) {
+            throw error
+        }
+    }
+
+    //update single task
+    @Mutation(() => Task)
+    @UseMiddleware(isAuthenticated)
+    async updateTask(@Arg('payload') payload: InputUpdateTask, @Arg('id') id: string) {
+        try {
+           const updatedTask = await this.taskService.update(id, payload)
+           return updatedTask
         } catch (error) {
             throw error
         }

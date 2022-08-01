@@ -76,7 +76,7 @@ export default class AuthResolver {
     }
 
     @Mutation(() => RefreshTokenResponse)
-    async refreshToken(@Ctx() context: Context): Promise<RefreshTokenResponse> {
+    async refreshToken(@Ctx() context: Context) {
 
         const {token} = context.req.cookies
 
