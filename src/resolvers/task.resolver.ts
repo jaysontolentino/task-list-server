@@ -4,7 +4,6 @@ import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql
 import { TaskService } from "../services/task.service";
 import { DecodedToken } from '../schema/auth.schema';
 import { InputAddTask, InputUpdateTask, Task } from '../schema/task.schema';
-import { prisma } from '@prisma/client';
 
 @Resolver()
 export default class TaskResolver {
@@ -39,7 +38,7 @@ export default class TaskResolver {
     }
 
     //get task by id
-    @Query(() => Task)
+    @Query(() => Task, {nullable: true})
     @UseMiddleware(isAuthenticated)
     async getById(@Arg('id') id: string) {
         try {
@@ -62,7 +61,7 @@ export default class TaskResolver {
             const task = await this.taskService.add(user?.user_id, input)
             return task
         } catch (error) {
-            
+            throw error
         }
     }
 

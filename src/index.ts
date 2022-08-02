@@ -13,16 +13,15 @@ import {
 import resolvers from './resolvers'
 import { createContext } from './context'
 import { formatError } from './utils/errorHandler'
-import { authChecker } from './utils/authChecker'
 
 (async function() {
 
   const app: Express = express()
-  const PORT = process.env.PORT || 8080
+  const PORT = process.env.PORT || 5000
 
   //express middlewares
   app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true
   }))
   app.use(cookieParser())
@@ -33,13 +32,13 @@ import { authChecker } from './utils/authChecker'
 
   const apolloServer = new ApolloServer({
     schema,
+    context: createContext,
+    formatError,
     plugins: [
       process.env.NODE_ENV === 'production' ?
       ApolloServerPluginLandingPageProductionDefault :
       ApolloServerPluginLandingPageGraphQLPlayground
     ],
-    context: createContext,
-    formatError
   })
 
   await apolloServer.start();
