@@ -21,8 +21,9 @@ Edit username and password of database url
 
 In the project directory, you can run:
 
-1. `npx prisma migrate dev`
-2. `yarn dev` or `npm run dev`
-3. `yarn test` or `npm test`
+1. `npm install` or `yarn` to install all the packages
+2. `npx prisma migrate dev` to migrate and seed database
+3. `yarn dev` or `npm run dev` to start project
+4. `yarn test` or `npm test` to perform testing
 
 
