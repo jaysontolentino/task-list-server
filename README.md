@@ -1,29 +1,47 @@
-# Task List Server (Apollo GraphQL Server)
+# Task List App
+#### _Apollo GraphQL server_
+
+This is the backend of the app
 
 ## Requirements
-Node v14.19.1 +
-Mysql 5.7
+- Node v14.19.1+
+- MySQL 5.7+
 
-## STACK
-Typescript
-Express
-Apollo Server
-Type-GraphQL
-Prisma
-Mocha/chai
+## Features
+
+- User Login and Registration
+- JWT Authentication
+- Task List CRUD Operations
 
 
-Rename .env.sample.text to .env
+## Tech Stack
+
+This project uses a number of open source projects to work properly:
+
+- Typescript
+- Express JS
+- MySQL
+- Apollo Server
+- GraphQL
+- Prisma
+- Mocha
+
+
+## Installation
+
+Rename .env.sample.text to .env.
 Edit username and password of database url
 
+Install the dependencies and devDependencies and start the server.
+`npm install` or `yarn`
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-1. `npm install` or `yarn` to install all the packages
-2. `npx prisma migrate dev` to migrate and seed database
-3. `yarn dev` or `npm run dev` to start project
-4. `yarn test` or `npm test` to perform testing
+`npx prisma migrate dev` to migrate and seed database
+`yarn dev` or `npm run dev` to start project
+`yarn test` or `npm test` to perform testing
 
-
+email: user1@email.com
+password: password
