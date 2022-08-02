@@ -2,7 +2,6 @@ import { Context } from './../context'
 import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from 'type-graphql'
 import { privateKey, signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt'
 import { DecodedToken, LoginResponse, RefreshTokenResponse, RegisterResponse, UserLoginInput, UserRegisterInput } from './../schema/auth.schema'
-import { User } from '../schema/user.schema'
 import { AuthService } from '../services/auth.service'
 import { prisma } from '../utils/prisma'
 import { isAuthenticated } from '../utils/isAuthenticated'
@@ -62,11 +61,7 @@ export default class AuthResolver {
     @Mutation(() => Boolean)
     @UseMiddleware(isAuthenticated)
     logout(@Ctx() context: Context) {
-        // context.res.cookie('token', '', {
-        //     httpOnly: true,
-        //     path: '/'
-        // })
-
+        
         context.res.clearCookie('token', {
             httpOnly: true,
             path: '/'
